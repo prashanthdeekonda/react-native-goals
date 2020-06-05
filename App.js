@@ -24,7 +24,7 @@ export default function App() {
     setCourseGoals((currentGoals) => [
       ...currentGoals,
       {
-        key: '_' + Math.random().toString(36).substr(2, 9),
+        id: Math.random().toString(),
         value: enteredGoal,
       },
     ]);
@@ -42,7 +42,9 @@ export default function App() {
         />
         <Button style={styles.btn} onPress={addGoalHandler} title="ADD" />
       </View>
+      {/* // default it looks for item.key if you dont specify */}
       <FlatList
+        keyExtractor={(item, index) => item.id}
         data={courseGoals}
         renderItem={(goal) => (
           <View style={styles.listItem}>
