@@ -34,7 +34,8 @@ export default function App() {
         data={courseGoals}
         renderItem={(goal) => (
           <GoalItem
-            onDelete={deleteGoal.bind(this, goal.item.id)}
+            id={goal.item.id}
+            onDelete={deleteGoal}
             goal={goal.item.value}
           />
         )}
