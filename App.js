@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  ScrollView,
+  FlatList,
+} from 'react-native';
 
 export default function App() {
   const [enteredGoal, setEnteredGoal] = useState('');
@@ -10,7 +18,16 @@ export default function App() {
   };
 
   const addGoalHandler = () => {
-    setCourseGoals((currentGoals) => [...currentGoals, enteredGoal]);
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    setCourseGoals((currentGoals) => [
+      ...currentGoals,
+      {
+        key: '_' + Math.random().toString(36).substr(2, 9),
+        value: enteredGoal,
+      },
+    ]);
     setEnteredGoal('');
   };
 
@@ -24,15 +41,15 @@ export default function App() {
           value={enteredGoal}
         />
         <Button style={styles.btn} onPress={addGoalHandler} title="ADD" />
-        
       </View>
-      <ScrollView>
-        {courseGoals.map((goal, index) => (
-          <View key={index} style={styles.listItem}>
-            <Text>{goal}</Text>
+      <FlatList
+        data={courseGoals}
+        renderItem={(goal) => (
+          <View style={styles.listItem}>
+            <Text>{goal.item.value}</Text>
           </View>
-        ))}
-      </ScrollView>
+        )}
+      />
     </View>
   );
 }
@@ -61,9 +78,9 @@ const styles = StyleSheet.create({
   },
   listItem: {
     padding: 10,
-    marginVertical:10,
+    marginVertical: 10,
     borderColor: 'black',
     backgroundColor: '#ccc',
-    borderWidth: 1
-  }
+    borderWidth: 1,
+  },
 });
