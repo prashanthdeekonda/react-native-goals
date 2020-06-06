@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList, Button } from 'react-native';
 import GoalItem from './components/GoalItem';
 import GoalInput from './components/GoalInput';
 
 export default function App() {
   const [courseGoals, setCourseGoals] = useState([]);
+
+  const [isModalOpen, setModalOpen] = useState(false);
 
   const addGoalHandler = (goalTitle) => {
     // Math.random should be unique because of its seeding algorithm.
@@ -17,6 +19,7 @@ export default function App() {
         value: goalTitle,
       },
     ]);
+    setModalOpen(false);
   };
 
   const deleteGoal = (id) => {
@@ -24,10 +27,15 @@ export default function App() {
       return currentGoals.filter((x) => x.id !== id);
     });
   };
+  
+  const cancelModal = () => {
+    setModalOpen(false);
+  }
 
   return (
     <View style={styles.screen}>
-      <GoalInput onDelete onAddGoal={addGoalHandler} />
+      <Button title="Add New Goal" onPress={() => setModalOpen(true)} />
+      <GoalInput cancel={cancelModal} visible={isModalOpen} onAddGoal={addGoalHandler} />
       {/* // default it looks for item.key if you dont specify */}
       <FlatList
         keyExtractor={(item, index) => item.id}
